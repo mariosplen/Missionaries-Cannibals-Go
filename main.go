@@ -5,5 +5,5 @@ func main() {
 	solution := bfs(*start)
 	p := solution.getPath()
 	p.printPath()
-	p.printDepth()
+
 }
