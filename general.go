@@ -5,6 +5,8 @@ import (
 	"log"
 )
 
+// General search algorithm from the book : Artificial Intelligence ISBN: 978-618-5196-44-8
+// Explanation of the algorithm is also in the book
 func general(initialState state) (state, error) {
 	var closed []state
 	var frontier []state
@@ -41,7 +43,7 @@ func delete(s state, states []state) []state {
 func prune(states []state) []state {
 	var prunedStates []state
 	for _, state := range states {
-		if state.isValid() {
+		if state.isValid() { // Here we get rid of the invalid states
 			prunedStates = append(prunedStates, state)
 		}
 	}

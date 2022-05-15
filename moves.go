@@ -1,11 +1,12 @@
 package main
 
 type move struct {
-	nMiss     int
-	nCann     int
-	leftwards bool
+	nMiss     int  // number of missionaries moving
+	nCann     int  // number of canibals moving
+	leftwards bool // type of movement
 }
 
+// All the posible moves that can be applied to a state
 var moves = map[string]move{
 	"2M_LR": {
 		nMiss:     2,
