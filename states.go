@@ -21,7 +21,7 @@ func (s state) isValid() bool {
 		(s.cl >= 0 && s.ml >= 0 && s.cl <= 3 && s.ml <= 3) // Their number should be beetween 0 and 3
 }
 
-// Using a move creates an example state without checking if it is valid yet
+// Using a move, creates an example state without checking if it is valid yet
 func newState(m move, cState state) state {
 	var nState state
 
@@ -37,7 +37,7 @@ func newState(m move, cState state) state {
 }
 
 // Returns a slice of children nodes, some may be invalid, we don't check for validity here
-// Must take frontier and closedset as parameters, because we need to check if the supposed node is already explored, otherwise the node is not a child
+// Must take frontier and closedset as parameters, because we need to check if the supposed node is already explored, otherwise the node cannot be a child
 func (s state) spawnChildren(frontier []state, closed []state) []state {
 	var children []state
 	var nState state
@@ -45,7 +45,7 @@ func (s state) spawnChildren(frontier []state, closed []state) []state {
 		if m.leftwards != s.bIsLeft {
 			nState = newState(m, s) // supposed node
 			nState.parentS = &s
-			if !contains(nState, closed) && !contains(nState, frontier) { // Checks if the supposed node is already explored by looking at closed and fronti0er
+			if !contains(nState, closed) && !contains(nState, frontier) { // Checks if the supposed node is already explored by looking at closed and frontier
 				children = append(children, nState)
 			}
 		}
