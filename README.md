@@ -15,10 +15,10 @@ Missionaries and Cannibals problem solved using Go during an optional university
 
 ## State Representation
 
-A state can be represented by a triple, (m c b), where m is the number of missionaries on
+A state can be represented by the (m c b) notation, where m is the number of missionaries on
 the left, c is the number of cannibals on the left, and b indicates whether the boat is on the
 left bank or right bank. For example, the initial state is (3 3 L) and the goal state is
-(0 0 R).
+(0 0 R). https://faculty.cc.gatech.edu/~riedl/classes/2014/cs3600/homeworks/missionaries-soln.pdf
 
 ## Usage
 
