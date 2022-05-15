@@ -3,44 +3,11 @@ package main
 import "fmt"
 
 type state struct {
-	ml   int
-	cl   int
-	mr   int
-	cr   int
-	bPos pos
+	ml      int
+	cl      int
+	bIsLeft bool
 
 	parentS *state
-}
-
-type stateSlice []state
-
-func (l stateSlice) contains(s state) bool {
-	for _, a := range l {
-		return a.cl == s.cl && a.ml == s.ml && a.bPos == s.bPos
-	}
-	return false
-}
-
-func (s state) String() string {
-	if s.bPos == left {
-		return fmt.Sprintf("(%v,%v,L)", s.ml, s.cl)
-	} else {
-		return fmt.Sprintf("(%v,%v,R)", s.ml, s.cl)
-	}
-
-}
-
-// Constructor for state
-func genState(ml int, cl int, bPos pos) *state {
-	s := state{
-		ml:   ml,
-		cl:   cl,
-		bPos: bPos,
-	}
-	s.mr = 3 - ml
-	s.cr = 3 - cl
-	s.parentS = nil
-	return &s
 }
 
 func (s state) isGoal() bool {
@@ -48,38 +15,41 @@ func (s state) isGoal() bool {
 }
 
 func (s state) isValid() bool {
-	return (s.ml == 0 || s.ml >= s.cl) && (s.mr == 0 || s.mr >= s.cr)
+	return (s.ml == 0 || s.ml >= s.cl) && (3-s.ml == 0 || 3-s.ml >= 3-s.cl) && (s.cl >= 0 && s.ml >= 0 && s.cl <= 3 && s.ml <= 3)
 }
 
-func move(mov movement, currentState state) *state {
-	var nextState *state
-	if mov.towards == right {
-		nextState = genState(
-			currentState.ml-mov.nMiss,
-			currentState.cl-mov.nCann,
-			right,
-		)
+func newState(m move, cState state) state {
+	var nState state
+
+	if m.leftwards {
+		nState = state{cState.ml + m.nMiss, cState.cl + m.nCann, true, nil}
 	} else {
-		nextState = genState(
-			currentState.ml+mov.nMiss,
-			currentState.cl+mov.nCann,
-			left,
-		)
+		nState = state{cState.ml - m.nMiss, cState.cl - m.nCann, false, nil}
 	}
-	return nextState
+	return nState
 }
 
-func (s state) spawnNeighbours() []state {
-	var neighbours []state
-	var newState *state
+func (s state) spawnChildren(frontier []state, closed []state) []state {
+	var children []state
+	var nState state
 	for _, m := range moves {
-		if m.towards != s.bPos {
-			newState = move(m, s)
-			if newState.isValid() {
-				newState.parentS = &s
-				neighbours = append(neighbours, *newState)
+		if m.leftwards != s.bIsLeft {
+			nState = newState(m, s)
+			nState.parentS = &s
+			if !contains(nState, closed) && !contains(nState, frontier) {
+				children = append(children, nState)
 			}
+
 		}
 	}
-	return neighbours
+	return children
+}
+
+func (s state) String() string {
+	if s.bIsLeft == true {
+		return fmt.Sprintf("(%v,%v,L)", s.ml, s.cl)
+	} else {
+		return fmt.Sprintf("(%v,%v,R)", s.ml, s.cl)
+	}
+
 }
